@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            height: 400px;
+            background-image: url('/static/img/fondo construccion.avif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #000000;
+            font-family: 'Open Sans', sans-serif;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h2.login-title {
+            color: #000000;
+            margin-top: 0px;
+            text-align: center;
+        }
+        
+        .formulario {
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .button:hover {
+            background-color: #4cae4c;
+        }
+        
+        p {
+            text-align: center;
+        }
+        
+        p a {
+            color: #28a745;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            color: #218838;
+        }
+        
+        /* Estilos específicos para pantallas pequeñas */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+                height: auto; /* Ajusta la altura automáticamente */
+            }
+            .title {
+                font-size: 1.2em;
+            }
+            .formulario {
+                padding: 15px;
+            }
+            .input-field {
+                padding: 10px;
+            }
+            .button {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="title">
+                ADAR
+            </div>
+        </header>
+        <h2 class="login-title">Iniciar sesión</h2>
+        <form method="POST" class="formulario">
+            <label for="nombre">Nombre:</label>
+            <input type="text" name="nombre" required class="input-field">
+            
+            <label for="clave">Clave:</label>
+            <input type="password" name="clave" required class="input-field">
+            
+            <input type="submit" value="Iniciar sesión" class="button">
+        </form>
+        <p>¿No tienes cuenta? <a href="{{ url_for('register') }}">Regístrate aquí</a></p>
+    </div>
+</body>
+</html>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+        console.log('Service Worker registrado con éxito:', registration);
+      }).catch((error) => {
+        console.log('Error al registrar el Service Worker:', error);
+      });
+    });
+  }
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open('my-app-cache').then((cache) => {
+      return cache.addAll([
+        '/',
+        '/login.html',
+        '/register.html',
+        '/avance.html',
+        '/perfil.html',
+        '/styles.css',
+        '/script.js',
+        '/assets/icon-192x192.png',
+        '/assets/icon-512x512.png'
+      ]);
+    })
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      return cachedResponse || fetch(event.request);
+    })
+  );
+});
+
+</script>
+
+
+
+
+

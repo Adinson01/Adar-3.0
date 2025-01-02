@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avance de la Obra</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <!-- Enlace para Font Awesome (icono del reloj) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        /* Encabezado */
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 8px;
+            text-align: left;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Evitar desplazamiento horizontal */
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 60px; /* Espacio para el encabezado fijo */
+            min-height: calc(100vh - 60px); /* Ajustar el contenido para no sobreponerse con el encabezado */
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1, h2 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: black;
+    text-align: center;
+}
+
+        .avance-tabla {
+            width: 100%;
+            border-collapse: collapse;
+            margin-left: -20px; /* Ajusta el valor según sea necesario */
+        }
+
+        .avance-tabla th,
+        .avance-tabla td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .avance-tabla th {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .avance-tabla tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .avance-tabla tr:hover {
+            background-color: #e0f7fa;
+            transform: scale(1.01);
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #1976D2;
+        }
+
+        .resaltar-rol {
+            font-weight: bold;
+            color: #333;
+        }
+
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .fecha-hora {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2196F3;
+            background-color: #E3F2FD;
+            padding: 6px;
+            border-radius: 5px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .fecha-hora i {
+            margin-right: 4px;
+            color: #1E88E5;
+        }
+
+        /* Estilo para los filtros */
+        .filtro-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .filtro {
+            padding: 8px;
+            border: 1px solid #2196F3;
+            border-radius: 4px;
+            width: 30%;
+        }
+
+        /* Barra lateral */
+        .sidebar {
+            width: 100%;
+            background-color: #2c2c2c;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0; /* Fijar en la parte inferior */
+            left: 0;
+            z-index: 999;
+            display: flex;
+            justify-content: space-evenly;
+            height: 30px;
+            align-items: center;  /* Centrar los botones verticalmente */
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            margin: 12px 0;
+            background-color: #2c2c2c;
+            color: #e9e9e9;
+            text-align: center;
+            border-radius: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #007bff;
+        }
+
+        .sidebar a i {
+            font-size: 20px;
+        }
+
+        /* Asegurarse que el contenido se ajuste a la pantalla */
+        @media screen and (max-width: 768px) {
+            .container {
+                margin-top: 10px; /* Ajustar para que el contenido no quede detrás de la barra lateral */
+                min-height: calc(100vh - 120px); /* Ajustar el alto para los dispositivos móviles */
+                margin-bottom: 20px; /* Agregar margen inferior para que no quede pegado al fondo */
+                margin-left: 5px; /* Mueve la tabla hacia la derecha */
+            } 
+        }
+
+/* Ocultar la columna de la foto vacía */
+.avance-tabla td:nth-child(5) {
+    display: none;
+}
+
+.avance-tabla td:nth-child(6) {
+    display: none;
+}
+
+/* Estilo para los íconos activos */
+.sidebar a.active .icon-circle {
+    background-color: #007bff; /* Azul para el fondo */
+    color: white;              /* Color blanco para el ícono */
+    border-radius: 50%;        /* Redondear el ícono */
+    padding: 2px;              /* Agregar padding para aumentar el tamaño */
+}
+
+/* Cambiar el color del fondo en hover de un enlace activo */
+.sidebar a.active:hover .icon-circle {
+    background-color: #0056b3; /* Cambiar a un azul más oscuro al pasar el ratón */
+}
+
+
+/* Ícono de reloj */
+.date-time-container i {
+    color: #007bff;
+    font-size: 16px;  /* Reducir el tamaño del ícono */
+    margin-right: 8px;  /* Reducir espacio entre el ícono y el texto */
+}
+
+/* Fecha */
+.date-time-container .date {
+    font-size: 14px;  /* Reducir el tamaño de la fecha */
+    font-weight: bold;
+    color: #000;
+}
+
+/* Hora */
+.date-time-container .time {
+    font-size: 12px;  /* Reducir el tamaño de la hora */
+    color: #666;
+}
+
+
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="title">
+            ADAR <br>
+        </div>
+        <div class="subtitle">
+            Registro de Tareas 📋
+        </div>
+    </header>
+
+        <!-- Barra lateral izquierda con los botones -->
+<div class="sidebar">
+    <a href="{{ url_for('profile') }}" class="btn-avance" title="Perfil">
+        <div class="icon-circle">👷‍♂️</div>
+    </a>
+    <a href="{{ url_for('avance') }}" class="{% if request.endpoint == 'avance' %}active{% endif %}" title="Registro de avance">
+        <div class="icon-circle">📋</div>
+    </a>
+    <a href="{{ url_for('avance_calculado') }}" class="btn-avance" title="Cálculo de avance">
+        <div class="icon-circle">📈</div>
+    </a>
+    <a href="{{ url_for('rendimiento') }}" class="btn-avance" title="Rendimiento">
+        <div class="icon-circle">🛠️</div>
+    </a>
+    <a href="{{ url_for('nuevo_ruta') }}" class="logout" title="Verificado">
+        <div class="icon-circle">✅</div>
+    </a>
+    <a href="{{ url_for('logout') }}" class="logout" title="Cerrar Sesión">
+        <div class="icon-circle">🔴</div>
+    </a>
+</div>
+
+        </div>
+    </header>
+
+    <div class="container">
+        <header>
+            <h2>Registro de Avance</h2>
+            <div class="filtro-container">
+                <input type="text" id="filtroPiso" class="filtro" placeholder="Seccion">
+                <input type="text" id="filtroTipo" class="filtro" placeholder="Nombre">
+                <input type="text" id="filtroSeccion" class="filtro" placeholder="Fecha">
+            </div>
+<table class="avance-tabla" id="tablaAvance">
+    <thead>
+        <tr>
+            <th>Piso y Sección</th>
+            <th>Nombre</th>
+            <th>Fecha y Hora</th>
+            <th>Foto Registro</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for seleccion, usuario in selecciones|sort(attribute='elevacion', reverse=True) %}
+        <tr>
+            <td>
+                Piso {{ seleccion.elevacion }} {{ seleccion.tipo }} {{ seleccion.seccion }}
+            </td>
+            <td>{{ seleccion.supervisor }} (<span class="resaltar-rol">{{ usuario.rol.split()[-1] }}</span>)</td>
+            <td>
+                <span class="date-time-container">
+                    <i class="fas fa-clock"></i>
+                    {{ seleccion.fecha.strftime('%Y-%m-%d %H:%M:%S') }} 
+                </span>
+            </td>
+            <td>
+                {% if seleccion.foto %}
+                <a href="{{ url_for('static', filename='uploads/' ~ seleccion.foto.replace('\\', '/').replace('static/uploads/', '')) }}" target="_blank">
+                    Ver Foto
+                </a>
+                {% else %}
+                No hay foto
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+        </header>
+    </div>
+
+    <script>
+// Función para filtrar la tabla
+function filtrarTabla() {
+    const filtroPiso = document.getElementById('filtroPiso').value.toLowerCase();
+    const filtroTipo = document.getElementById('filtroTipo').value.toLowerCase();
+    const filtroSeccion = document.getElementById('filtroSeccion').value.toLowerCase();
+    const tabla = document.getElementById('tablaAvance');
+    const filas = tabla.getElementsByTagName('tr');
+
+    for (let i = 1; i < filas.length; i++) { // Empezar desde 1 para omitir el encabezado
+        const celdas = filas[i].getElementsByTagName('td');
+        const pisoSeccion = celdas[0].textContent.toLowerCase();  // Columna de Piso y Sección
+        const nombre = celdas[1].textContent.toLowerCase();  // Columna de Nombre
+        const fechaHora = celdas[2].textContent.toLowerCase();  // Columna de Fecha y Hora
+
+        if (
+            pisoSeccion.includes(filtroPiso) &&
+            nombre.includes(filtroTipo) &&  // Filtro para Tipo
+            fechaHora.includes(filtroSeccion)
+        ) {
+            filas[i].style.display = ''; // Mostrar fila
+        } else {
+            filas[i].style.display = 'none'; // Ocultar fila
+        }
+    }
+}
+
+// Añadir eventos de entrada a los filtros
+document.getElementById('filtroPiso').addEventListener('input', filtrarTabla);
+document.getElementById('filtroTipo').addEventListener('input', filtrarTabla);
+document.getElementById('filtroSeccion').addEventListener('input', filtrarTabla);
+
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+

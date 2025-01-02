@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rendimiento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Estilos globales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Evitar desplazamiento horizontal */
+        }
+
+        /* Encabezado */
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 8px;
+            text-align: left;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        /* Contenedor principal */
+        .form-container {
+            margin-top: 70px; /* Para evitar el solapamiento con el encabezado */
+            padding: 20px;
+            background-color: #f5f5f5;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Estilos para la tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #007bff; /* Azul eléctrico */
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f1f1f1; /* Gris suave para filas pares */
+        }
+
+        table tr:nth-child(odd) {
+            background-color: #ffffff; /* Blanco para filas impares */
+        }
+
+        table tr:hover {
+            background-color: #e2e2e2; /* Fondo claro al pasar el ratón */
+        }
+
+
+        /* Barra inferior */
+        .bottom-sidebar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            display: flex;
+            justify-content: space-evenly;
+            padding: 12px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .bottom-sidebar a {
+            color: white;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .icon-circle {
+            font-size: 18px;
+            color: white;
+        }
+
+/* Resaltar el enlace activo en la barra inferior */
+.bottom-sidebar a.active .icon-circle {
+    background-color: #007bff;  /* Cambia el fondo a azul (puedes elegir otro color) */
+    border-radius: 50%;  /* Redondear el borde */
+    padding: 5px;  /* Añadir algo de espacio para que se vea más grande */
+    color: white;  /* Cambiar el color del ícono a blanco */
+}
+
+/* Cambiar el color de los íconos cuando no están activos */
+.bottom-sidebar a .icon-circle {
+    color: #ddd;  /* Color de los íconos no activos */
+    transition: all 0.3s ease-in-out; /* Transición suave */
+}
+
+/* Hacer que el icono cambie de color cuando el ratón pase por encima */
+.bottom-sidebar a:hover .icon-circle {
+    color: #fff;  /* Color blanco cuando el cursor está sobre el ícono */
+    background-color: #444;  /* Fondo gris oscuro cuando pasa el ratón */
+}
+
+        /* Barra lateral */
+        .sidebar {
+            width: 48px;
+            background-color: #2c2c2c;
+            padding: 60px 0;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0px;
+            margin: 15px 0;
+            background-color: #2c2c2c;
+            color: #e9e9e9;
+            text-align: center;
+            border-radius: 0%;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #007bff;
+        }
+
+/* Resaltar el enlace activo */
+.sidebar a.active .icon-circle {
+    background-color: #007bff;  /* Cambia el fondo a azul (puedes elegir el color que prefieras) */
+    border-radius: 50%;  /* Redondear el borde */
+    padding: 5px;  /* Añadir algo de espacio */
+}
+
+/* Ajustes responsivos para pantallas móviles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;                  /* Ocupa todo el ancho en móviles */
+        height: 30px;                  /* Ajusta la altura de la barra */
+        position: fixed;
+        bottom: 0;                     /* Coloca la barra en la parte inferior */
+        top: auto;                     /* Elimina la posición superior */
+        flex-direction: row;           /* Cambia a disposición horizontal */
+        justify-content: space-around; /* Distribuye los íconos horizontalmente */
+        padding: 10px 0;               /* Ajusta el padding */
+    }
+    </style>
+</head>
+<body>
+    <!-- Encabezado -->
+    <header class="header">
+        <div class="title">ADAR</div>
+        <div class="subtitle">Rendimiento 🛠️</div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main style="margin-top: 70px;">
+
+            <!-- Tabla de selecciones -->
+            {% if selecciones %}
+<form method="POST">
+    <table>
+        <thead>
+            <tr>
+                <th>Piso</th>
+                <th>Tipo</th>
+                <th>Porcentaje</th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha de Término</th>
+                <th>Días</th>
+                <th>Trabajadores</th>
+                <th>Factor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for seleccion in selecciones %}
+            <tr>
+                <td>{{ seleccion.elevacion }}</td>
+                <td>{{ seleccion.tipo }}</td>
+                <td>{{ seleccion.porcentaje }}</td>
+                <td>{{ seleccion.fecha_inicio.strftime('%Y-%m-%d') }}</td>
+                <td>{{ seleccion.fecha_termino.strftime('%Y-%m-%d') }}</td>
+                <td>{{ seleccion.diferencia_dias }}</td>
+                <td>
+<input type="number" id="trabajadores_{{ seleccion.id }}" name="trabajadores_{{ seleccion.id }}" 
+       value="{{ seleccion.trabajadores if seleccion.trabajadores is not none else '' }}" min="1" 
+       placeholder="Trabajadores">
+
+                </td>
+                <td>
+<input type="number" id="factor_{{ seleccion.id }}" name="factor_{{ seleccion.id }}" 
+       value="{{ seleccion.factor if seleccion.factor is not none else '' }}" step="0.01" min="0" 
+       placeholder="Factor">
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Guardar</button>
+</form>
+    {% else %}
+    <p>No hay selecciones registradas.</p>
+    {% endif %}
+</main>
+
+    <!-- Barra inferior -->
+    <div class="sidebar">
+        <a href="{{ url_for('profile') }}" title="Perfil">
+            <div class="icon-circle">👷‍♂️</div>
+        </a>
+        <a href="{{ url_for('avance') }}" title="Registro de avance">
+            <div class="icon-circle">📋</div>
+        </a>
+        <a href="{{ url_for('avance_calculado') }}" class="btn-avance" title="Cálculo de avance">
+                <div class="icon-circle">📈</div>
+        </a>
+<a href="{{ url_for('rendimiento') }}" class="btn-avance {% if request.endpoint == 'rendimiento' %}active{% endif %}" title="Rendimiento">
+    <div class="icon-circle">🛠️</div>
+</a>
+    <a href="{{ url_for('nuevo_ruta') }}" class="logout" title="Verificado">
+        <div class="icon-circle">✅</div>
+    </a>
+        <a href="{{ url_for('logout') }}" title="Cerrar Sesión">
+            <div class="icon-circle">🔴</div>
+        </a>
+    </div>
+
+    <script>
+        // Función para guardar los valores en localStorage
+        function guardarValores(seleccionId) {
+            const trabajadores = document.getElementById(`trabajadores_${seleccionId}`).value;
+            const factor = document.getElementById(`factor_${seleccionId}`).value;
+
+            // Guardamos los valores en localStorage
+            localStorage.setItem(`trabajadores_${seleccionId}`, trabajadores);
+            localStorage.setItem(`factor_${seleccionId}`, factor);
+        }
+
+        // Función para cargar los valores guardados de localStorage
+        function cargarValores(seleccionId) {
+            const trabajadores = localStorage.getItem(`trabajadores_${seleccionId}`);
+            const factor = localStorage.getItem(`factor_${seleccionId}`);
+
+            if (trabajadores) {
+                document.getElementById(`trabajadores_${seleccionId}`).value = trabajadores;
+            }
+            if (factor) {
+                document.getElementById(`factor_${seleccionId}`).value = factor;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Respuestas y Selecciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Encabezado */
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 8px;
+            text-align: left;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #white;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Evitar desplazamiento horizontal */
+}
+
+        /* Contenedor principal para el formulario */
+        .form-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #white;
+        }
+
+
+        /* Barra lateral */
+        .sidebar {
+            width: 48px;
+            background-color: #2c2c2c;
+            padding: 60px 0;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0px;
+            margin: 15px 0;
+            background-color: #2c2c2c;
+            color: #e9e9e9;
+            text-align: center;
+            border-radius: 0%;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #007bff;
+        }
+
+/* Resaltar el enlace activo */
+.sidebar a.active .icon-circle {
+    background-color: #007bff;  /* Cambia el fondo a azul (puedes elegir el color que prefieras) */
+    border-radius: 50%;  /* Redondear el borde */
+    padding: 5px;  /* Añadir algo de espacio */
+}
+
+/* Ajustes responsivos para pantallas móviles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;                  /* Ocupa todo el ancho en móviles */
+        height: 30px;                  /* Ajusta la altura de la barra */
+        position: fixed;
+        bottom: 0;                     /* Coloca la barra en la parte inferior */
+        top: auto;                     /* Elimina la posición superior */
+        flex-direction: row;           /* Cambia a disposición horizontal */
+        justify-content: space-around; /* Distribuye los íconos horizontalmente */
+        padding: 10px 0;               /* Ajusta el padding */
+    }
+
+
+        /* Sección para los detalles de usuario */
+   /* Estilo para los detalles del usuario */
+.user-details {
+    display: flex;
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+
+
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 0;
+            margin-left: 20px;
+            color: #6c757d;
+            text-align: center;
+        }
+
+/* Contenedor de la imagen y el texto */
+.user-info {
+    display: flex;
+    flex-direction: column; /* Coloca el texto debajo de la imagen */
+    align-items: center; /* Centra el texto */
+    margin-left: 20px; /* Añade un poco de espacio a la izquierda */
+    margin-top: 20px;
+}
+
+
+#profile-photo {
+    width: 100px;  /* Ajusta el tamaño a 100px */
+    height: 100px; /* Mantiene la proporción circular */
+    border-radius: 50%; /* Hacer que la imagen sea circular */
+    border: 3px solid #C0C0C0; /* Borde azul */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animaciones */
+    cursor: pointer;
+}
+
+#profile-photo:hover {
+    transform: scale(1.1); /* Ampliar ligeramente al pasar el cursor */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Títulos (nombre y rol) */
+            .user-details h1, .user-details h2 {
+                font-size: 1.2rem;
+                text-align: center;
+            }
+        }
+
+.user-details h1 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #000000;
+    margin: 0;
+}
+
+
+        .user-details h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 40px 0 0; /* Asegura que el rol esté debajo del nombre */
+            margin-left: -150px;
+            color: #6c757d;
+            text-align: center;
+        }
+
+
+
+    .reject-button {
+        background-color: #dc3545;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    .reject-button:hover {
+        background-color: #c82333;
+    }
+
+    .reject-reason {
+        margin-top: 10px;
+    }
+
+      /* Toggle estilizado */
+        .toggle-button {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #black;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+            margin-bottom: 10px;
+        }
+
+        .toggle-button:hover {
+            background: linear-gradient(90deg, #0056b3, #003f8c);
+            transform: translateY(-2px);
+        }
+
+        /* Iconos para expandir/contraer */
+        .toggle-button .icon {
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-button.collapsed .icon {
+            transform: rotate(90deg);
+        }
+
+        /* Contenedor de detalles */
+        .details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+        }
+
+        .details.active {
+            display: block;
+        }
+
+        /* Input estilizado */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        fieldset {
+            border: none;
+            margin: 10px 0;
+            padding: 0;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        /* Estilos de la cámara */
+        .camera-input {
+            display: none;z
+        }
+
+        .camera-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0px;
+            position: relative;
+            top: 50px;
+        }
+
+.camera-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #007bff;  /* Contorno azul alrededor de la imagen */
+}
+
+
+    @keyframes slideIn {
+        0% {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+
+/* Ajustes responsivos para pantallas móviles */
+@media (max-width: 768px) {
+.notificaciones-container {
+    width: 100%; /* Ocupa todo el ancho de la pantalla */
+    margin-left: 0;  /* Elimina el margen que podría estar empujando el contenedor hacia la derecha */
+    margin-right: 20px;
+    padding: 1px; /* Espaciado interno */
+    margin-top: 50px; /* Espaciado superior */
+    box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
+    background-color: #f0f0f0; /* Color de fondo suave (gris claro) */
+}
+}
+
+/* Contenedor general */
+.calendar-container {
+    text-align: center;
+    margin: 10px auto;
+    padding: 0 10px;
+    width: 100%; /* Asegura que ocupe todo el ancho */
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+/* Botón del calendario */
+.calendar-toggle {
+    background-color: #white;
+    color: white;
+    font-size: 1em;
+    padding: 6px 8px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.calendar-toggle:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Contenido del calendario */
+.calendar-content {
+    max-width: 100%; /* Se ajusta al ancho completo del contenedor */
+    margin: 15px auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    font-size: 0.9em;
+}
+
+.calendar-content h2 {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 1.5em;
+    color: #333;
+}
+
+/* Cabecera del calendario */
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: #f1f1f1;
+    padding: 5px 0;
+    text-align: center;
+    font-weight: bold;
+    color: #555;
+    font-size: 0.85em; /* Reducir el tamaño de texto */
+}
+
+/* Días del calendario */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    padding: 5px;
+}
+
+.calendar-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px; /* Reducir altura */
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 0.85em; /* Reducir tamaño de fuente */
+    color: #333;
+}
+
+.calendar-day:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.calendar-day.has-notes {
+    background-color: #28a745;
+    color: #fff;
+    font-weight: bold;
+}
+
+.calendar-day.active {
+    background: linear-gradient(to bottom right, #98FB98, #32CD32); /* Verde claro a verde oscuro */
+    font-weight: bold;
+    border: 2px solid #32CD32; /* Verde oscuro */
+    border-radius: 5px;
+    color: white; /* Contrasta mejor con el fondo verde */
+    transition: background-color 0.3s, transform 0.2s; /* Efecto suave al interactuar */
+}
+
+.calendar-day.active:hover {
+    transform: scale(1.05); /* Pequeño efecto de aumento al pasar el cursor */
+    background: linear-gradient(to bottom right, #00FF00, #228B22); /* Verde más claro a verde más oscuro */
+}
+
+
+/* Sección de notas */
+.note-section {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+.note-section h3 {
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.note-section ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.note-section li {
+    padding: 5px 0;
+    border-bottom: 1px dashed #ccc;
+}
+
+.note-section textarea {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.note-section button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
+}
+
+.note-section button:hover {
+    background-color: #0056b3;
+}
+
+/* Media Query: Estilo para pantallas pequeñas */
+@media (max-width: 600px) {
+    .calendar-content {
+        font-size: 0.8em;
+    }
+
+    .calculadora-container {
+        padding: 5px;
+    }
+
+    .calendar-header {
+        font-size: 0.75em;
+    }
+
+    .calendar-day {
+        height: 40px; /* Reducir más la altura */
+        font-size: 0.75em;
+    }
+
+    .note-section h3 {
+        font-size: 0.9em;
+    }
+
+    .note-section textarea {
+        font-size: 0.8em;
+    }
+
+    .note-section button {
+        font-size: 0.8em;
+    }
+
+    .calculadora-display input {
+        font-size: 1rem;
+        padding: 6px;
+    }
+
+    .calculadora-botones button {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
+
+/* Controles de navegación */
+.calendar-controls {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.calendar-button {
+    font-size: 1.5em;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: background-color 0.3s;
+}
+
+.calendar-button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Feriados */
+.calendar-day.holiday {
+    background-color: #ffcccb; /* Rojo claro */
+    font-weight: bold;
+    border: 2px solid #d9534f;
+    border-radius: 5px;
+}
+
+.calendar-day.holiday:hover {
+    background-color: #ff6b81;
+}
+
+.calendar-day.today {
+    background: linear-gradient(to bottom right, #87CEFA, #4682B4); /* Azul claro a azul oscuro */
+    font-weight: bold;
+    border: 2px solid #4682B4; /* Azul oscuro */
+    border-radius: 5px;
+    color: white; /* Contrasta mejor con el fondo azul */
+    transition: background-color 0.3s, transform 0.2s; /* Efecto suave al interactuar */
+}
+
+.calendar-day.today:hover {
+    transform: scale(1.05); /* Pequeño efecto de aumento al pasar el cursor */
+    background: linear-gradient(to bottom right, #ADD8E6, #5F9EA0); /* Azul más claro a cian oscuro */
+}
+
+
+
+/* Ajustes para el contenedor de la calculadora */
+.calculadora-container {
+    width: 100%; /* Asegura que ocupe todo el ancho */
+    max-width: 600px; /* Ancho máximo en pantallas más grandes */
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: #f9f9f9;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.calculadora-container.minimizado {
+    width: 40px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calculadora-container h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #333;
+    line-height: 1;
+}
+
+.calculadora-display {
+    margin-bottom: 20px;
+}
+
+.calculadora-display input {
+    width: 100%;
+    font-size: 1.5rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: right;
+    background: #fff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.calculadora-botones {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.calculadora-botones button {
+    font-size: 1.25rem;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.calculadora-botones button:hover {
+    background: #0056b3;
+}
+
+.calculadora-botones button.clear {
+    background: #dc3545;
+}
+
+.calculadora-botones button.clear:hover {
+    background: #a71d2a;
+}
+
+.minimizado .calculadora-display,
+.minimizado .calculadora-botones {
+    display: none;
+}
+
+/* Media Query: Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .contenedor-principal {
+        flex-direction: column; /* Cambia a diseño en columna en pantallas pequeñas */
+        align-items: center;
+        gap: 10px;
+    }
+}
+    .calculadora-container {
+        max-width: 100%;
+        padding: 5px;
+    }
+
+    .calculadora-display input {
+        font-size: 1rem;
+        padding: 6px;
+    }
+
+    .calculadora-botones button {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
+
+/* Contenedor principal para alinear calendario y calculadora */
+.contenedor-principal {
+    display: flex; /* Diseño en fila */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: flex-start; /* Alinea verticalmente al inicio */
+    gap: 20px; /* Espaciado entre los elementos */
+    margin: 20px auto; /* Centra el contenedor principal */
+}
+
+/* Ajustes responsivos para el contenedor principal */
+@media (max-width: 768px) {
+    .contenedor-principal {
+        flex-direction: column; /* Cambia a diseño en columna en pantallas pequeñas */
+        align-items: center; /* Centra los elementos en la columna */
+        gap: 10px; /* Reduce el espaciado entre elementos */
+    }
+}
+
+    </style>
+
+
+
+    <script>
+// Función para insertar valores en el display
+function insertar(valor) {
+    const display = document.getElementById('calculadora-display');
+    display.value += valor;
+}
+
+// Función para limpiar el display
+function limpiar() {
+    const display = document.getElementById('calculadora-display');
+    display.value = '';
+}
+
+// Función para realizar el cálculo
+function calcular() {
+    const display = document.getElementById('calculadora-display');
+    try {
+        display.value = eval(display.value);
+    } catch (error) {
+        display.value = 'Error';
+    }
+}
+
+function minimizarMaximizarCalculadora() {
+    const calculadoraContainer = document.getElementById("calculadora-container");
+    calculadoraContainer.classList.toggle("minimizado");
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const calendarToggle = document.getElementById("toggle-calendar");
+    const calendarContent = document.getElementById("calendar-content");
+    const calendarGrid = document.getElementById("calendar-grid");
+    const noteSection = document.getElementById("note-section");
+    const notesList = document.getElementById("notes-list");
+    const selectedDateElement = document.getElementById("selected-date");
+    const dateInput = document.getElementById("date");
+    const noteForm = document.getElementById("note-form");
+    const calendarTitle = document.getElementById("calendar-title");
+
+    const chileanHolidays = [
+        "2024-01-01", "2024-04-07", "2024-05-01", "2024-09-18", "2024-12-25" // Ejemplo de feriados
+    ];
+
+let currentDate = new Date(); // Fecha del sistema local
+const timezoneOffset = currentDate.getTimezoneOffset(); // Desfase horario en minutos
+
+// Ajustar la fecha a la zona horaria de Chile (UTC-3 o UTC-4 dependiendo de la época del año)
+currentDate = new Date(currentDate.getTime() - timezoneOffset * 60 * 1000);
+
+// Obtener el mes y el año actuales
+let currentMonth = currentDate.getMonth();
+let currentYear = currentDate.getFullYear();
+
+
+    calendarToggle.addEventListener("click", () => {
+        if (calendarContent.style.display === "none") {
+            calendarContent.style.display = "block";
+            calendarToggle.textContent = "🔽 Ocultar Calendario";
+        } else {
+            calendarContent.style.display = "none";
+            calendarToggle.textContent = "📅";
+        }
+    });
+
+    document.getElementById("prev-month").addEventListener("click", () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        generateCalendar(currentYear, currentMonth);
+    });
+
+    document.getElementById("next-month").addEventListener("click", () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        generateCalendar(currentYear, currentMonth);
+    });
+
+function generateCalendar(year, month) {
+    calendarGrid.innerHTML = "";
+    calendarTitle.textContent = `${getMonthName(month)} ${year}`;
+
+    // Día de inicio y días en el mes
+    const firstDay = new Date(year, month, 1).getDay() - 1; // Ajustar el día de inicio
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 0; i < (firstDay < 0 ? 6 : firstDay); i++) {
+        const emptyCell = document.createElement("div");
+        calendarGrid.appendChild(emptyCell);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement("div");
+        dayCell.className = "calendar-day";
+        dayCell.textContent = day;
+
+        const currentDateString = new Date(year, month, day).toISOString().split("T")[0];
+
+        // Resaltar el día actual
+        if (currentDateString === currentDate.toISOString().split("T")[0]) {
+            dayCell.classList.add("today");
+        }
+
+        // Resaltar feriados en Chile
+        if (chileanHolidays.includes(currentDateString)) {
+            dayCell.classList.add("holiday");
+        }
+
+        dayCell.addEventListener("click", () => {
+            showNotesForDate(currentDateString);
+            highlightSelectedDay(dayCell);
+        });
+
+        calendarGrid.appendChild(dayCell);
+    }
+}
+    function getMonthName(month) {
+        const months = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+        return months[month];
+    }
+
+    function showNotesForDate(date) {
+        noteSection.style.display = "block";
+        selectedDateElement.textContent = date;
+        dateInput.value = date;
+
+        // Obtener las notas para la fecha seleccionada
+        fetch(`/respuestas_selecciones?date=${date}`)
+            .then(response => response.json())
+            .then(data => {
+                notesList.innerHTML = data.notes.map(note => `<li>${note.note}</li>`).join("");
+            });
+    }
+
+    function highlightSelectedDay(selectedCell) {
+        document.querySelectorAll(".calendar-day").forEach(cell => cell.classList.remove("active"));
+        selectedCell.classList.add("active");
+    }
+
+function getChileanDate() {
+    const chileanDate = new Intl.DateTimeFormat("es-CL", {
+        timeZone: "America/Santiago",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+    }).format(new Date());
+    return new Date(chileanDate);
+}
+
+
+    // Enviar la nota al servidor
+    noteForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const date = dateInput.value;
+        const note = document.getElementById("note").value;
+
+        if (date && note) {
+            fetch('/respuestas_selecciones', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    date: date,
+                    note: note
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Si la nota fue guardada correctamente
+                    showNotesForDate(date); // Mostrar las notas para la fecha seleccionada
+                    noteForm.reset();
+                } else {
+                    // Mostrar un error si la nota no se guardó
+                    alert('Error al guardar la nota');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un problema al guardar la nota.');
+            });
+        }
+    });
+
+    generateCalendar(currentYear, currentMonth);
+});
+
+function getChileanDate() {
+    const chileanDate = new Intl.DateTimeFormat("es-CL", {
+        timeZone: "America/Santiago",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+    }).format(new Date());
+    return new Date(chileanDate);
+}
+
+        // Función que se ejecuta cuando se selecciona una foto
+        function handleFileSelect(event) {
+            const file = event.target.files[0]; // Obtiene el primer archivo seleccionado
+            if (file) {
+                const formData = new FormData();
+                formData.append('foto_perfil', file);
+
+                fetch('{{ url_for("subir_foto") }}', {
+    method: 'POST',
+    body: formData
+})
+.then(response => {
+    return response.json(); // Asegúrate de que la respuesta es JSON
+})
+.then(data => {
+    console.log('Data received:', data);  // Verifica la respuesta
+    if (data.success) {
+        const imgElement = document.querySelector('#profile-photo');
+        imgElement.src = URL.createObjectURL(file); // Muestra la foto seleccionada
+    } else {
+        alert('Hubo un error al subir la foto');
+    }
+})
+.catch(error => {
+    console.error('Error:', error);
+    alert('Hubo un error al subir la foto');
+});
+
+            }
+        }
+
+fetch('{{ url_for("subir_foto") }}', {
+    method: 'POST',
+    body: formData
+})
+.then(response => response.json())  // Verifica si la respuesta es JSON
+.then(data => {
+    if (data.success) {
+        // Actualiza la imagen mostrada con la nueva foto
+        const imgElement = document.querySelector('#profile-photo');
+        imgElement.src = URL.createObjectURL(file); // Muestra la foto seleccionada
+    } else {
+        console.log(data);  // Log de la respuesta para depuración
+        alert('Hubo un error al subir la foto');
+    }
+})
+.catch(error => {
+    console.error('Error:', error);
+    alert('Hubo un error al subir la foto');
+});
+
+
+    // Mostrar/ocultar el campo para la razón de rechazo
+    function toggleRejectReason(id) {
+        const container = document.getElementById(`reject-reason-container-${id}`);
+        container.style.display = container.style.display === 'none' ? 'block' : 'none';
+    }
+
+function rechazarProtocolo(id) {
+    const razon = document.getElementById(`rechazo-razon-${id}`).value;
+
+    if (!razon.trim()) {
+        alert('Por favor, escriba una razón para el rechazo.');
+        return;
+    }
+
+    fetch(`/reprobar_protocolo/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ razon }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById(`approval-status-${id}`).innerHTML = "<span style='color: red;'>Reprobado</span>";
+            alert(data.message);
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Hubo un error al reprobar el protocolo.');
+    });
+}
+
+
+
+        function toggleDetails(id) {
+            const details = document.getElementById(id);
+            details.style.display = details.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Función para aprobar el protocolo
+function approveProtocol(id) {
+    // Hacer una solicitud AJAX al backend para aprobar el protocolo
+    fetch(`/aprobar_protocolo/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Cambiar el estado visual del protocolo
+            document.getElementById('approve-button-' + id).disabled = true;
+            document.getElementById('approval-status-' + id).innerHTML = "<span style='color: green;'>Aprobado</span>";
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Hubo un error al aprobar el protocolo.');
+    });
+}
+
+
+    function toggleRechazoMessage(index, isReprobado) {
+        const rechazoMessageDiv = document.getElementById('rechazo-message-' + index);
+        if (isReprobado) {
+            rechazoMessageDiv.style.display = 'block';
+        } else {
+            rechazoMessageDiv.style.display = 'none';
+        }
+    }
+
+      // Función para cargar la imagen de perfil desde localStorage al cargar la página
+        window.onload = function() {
+            const imagenPerfil = localStorage.getItem('fotoPerfil');
+            if (imagenPerfil) {
+                document.getElementById('foto-perfil').src = imagenPerfil;
+            }
+        };
+
+        // Función para mostrar la previsualización de la imagen y guardarla en localStorage
+        function mostrarPrevisualizacion(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageSrc = e.target.result;
+                    // Actualiza la imagen de previsualización
+                    document.getElementById('foto-perfil').src = imageSrc;
+                    // Guarda la imagen en localStorage
+                    localStorage.setItem('fotoPerfil', imageSrc);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+function subirFoto(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append('foto_perfil', file);
+
+        fetch('/subir_foto', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const imageSrc = `/static/uploads/${data.filename}`;
+                document.getElementById('foto-perfil').src = imageSrc;
+                alert('Foto de perfil actualizada correctamente.');
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error al subir la foto:', error);
+            alert('Ocurrió un error al subir la foto.');
+        });
+    }
+}
+
+    </script>
+</head>
+<body>
+    <!-- Encabezado con título ADAR y subtítulo -->
+    <header class="header">
+        <div class="title">ADAR</div>
+        <div class="subtitle">
+            Perfil 👷‍♂️ 
+        </div>
+    </header>
+
+<div class="user-info">
+    <div class="camera-container">
+        <label for="foto" class="camera-label">
+            <!-- Foto de perfil -->
+            <img id="foto-perfil" src="{{ url_for('static', filename='uploads/' + usuario.foto_perfil) if usuario.foto_perfil else 'static/default-profile.png' }}" alt="Foto de perfil" class="camera-icon">
+        </label>
+        <input type="file" name="foto_perfil" accept="image/*" id="foto" class="camera-input" onchange="subirFoto(event)">
+    </div>
+    <div class="user-details">
+        <h1>{{ usuario.nombre }}</h1>
+        <h2>{{ usuario.rol }}</h2>
+    </div>
+</div>
+
+
+<div class="notificaciones-container">
+{% if selecciones %}
+<form method="POST" action="{{ url_for('guardar_cambios') }}">
+    {% for seleccion in selecciones %}
+        <div class="section-container">
+            <p class="toggle-button" onclick="toggleDetails('details-{{ loop.index }}')">
+                Piso {{ seleccion.elevacion }} - {{ seleccion.tipo }} - {{ seleccion.seccion }} - {{ seleccion.rol_supervisor }}
+                <span id="approval-status-{{ loop.index }}">
+                    {% if seleccion.aprobado %}
+                        <span style="color: green;">Aprobado</span>
+                    {% elif seleccion.reprobado %}
+                        <span style="color: red;">Reprobado</span>
+                    {% else %}
+                        <span style="color: orange;">Pendiente</span>
+                    {% endif %}
+                </span>
+            </p>
+
+            <div id="details-{{ loop.index }}" class="details">
+                <fieldset>
+                    <!-- Datos de la selección -->
+                    <label>Fecha:</label>
+                    <input type="text" value="{{ seleccion.fecha.strftime('%Y-%m-%d') }}" readonly><br>
+                    <label>Supervisor:</label>
+                    <input type="text" value="{{ seleccion.supervisor }}" readonly><br>
+
+                    <h3>Verificaciones</h3>
+
+{% if seleccion.respuestas_cuestionario %}
+    {% for key, value in seleccion.respuestas_cuestionario.items() %}
+        
+        {% if key == "safetyCheck" %}
+            {% if seleccion.tipo == "Muro" %}
+                {% if seleccion.rol_supervisor == "Supervisor de enfierradura" %}
+                    <label>¿La enfierradura está alineada correctamente en el muro?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de moldaje" %}
+                    <label>Desmoldante: Aplicación de desmoldante en la superficie del moldaje, limpia y seca</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de hormigón" %}
+                    <label>¿El hormigón para el muro está en el estado adecuado?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de instalaciones" %}
+                    <label>¿Las instalaciones en el muro están correctamente alineadas?</label><br>
+                {% else %}
+                    <label>¿Está la seguridad en el muro en orden?</label><br>
+                {% endif %}
+            {% elif seleccion.tipo == "Losa" %}
+                {% if seleccion.rol_supervisor == "Supervisor de enfierradura" %}
+                    <label>¿La enfierradura está alineada correctamente en la losa?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de moldaje" %}
+                    <label>Instalación de marcos: correcta instalación de puntales de losa</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de hormigón" %}
+                    <label>¿El hormigón para la losa está en el estado adecuado?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de instalaciones" %}
+                    <label>¿Las instalaciones en la losa están correctamente alineadas?</label><br>
+                {% else %}
+                    <label>¿Está la seguridad en la losa en orden?</label><br>
+                {% endif %}
+            {% endif %}
+
+        {% elif key == "qualityCheck" %}
+            {% if seleccion.tipo == "Muro" %}
+                {% if seleccion.rol_supervisor == "Supervisor de enfierradura" %}
+                    <label>¿La calidad de la enfierradura en el muro es la adecuada?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de moldaje" %}
+                    <label>Montaje: Verificar firmeza y espesor entre paredes</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de hormigón" %}
+                    <label>¿La calidad del hormigón para el muro es la adecuada?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de instalaciones" %}
+                    <label>¿Las instalaciones en el muro tienen la calidad requerida?</label><br>
+                {% else %}
+                    <label>¿La calidad de los materiales para el muro es adecuada?</label><br>
+                {% endif %}
+            {% elif seleccion.tipo == "Losa" %}
+                {% if seleccion.rol_supervisor == "Supervisor de enfierradura" %}
+                    <label>¿La calidad de la enfierradura en la losa es la adecuada?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de moldaje" %}
+                    <label>Cabezales: chequear existencia y correcta instalación</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de hormigón" %}
+                    <label>¿La calidad del hormigón para la losa es la adecuada?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de instalaciones" %}
+                    <label>¿Las instalaciones en la losa tienen la calidad requerida?</label><br>
+                {% else %}
+                    <label>¿La calidad de los materiales para la losa es adecuada?</label><br>
+                {% endif %}
+            {% endif %}
+
+        {% elif key == "materialCheck" %}
+            {% if seleccion.tipo == "Muro" %}
+                {% if seleccion.rol_supervisor == "Supervisor de enfierradura" %}
+                    <label>¿El material para la enfierradura en el muro es el adecuado?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de moldaje" %}
+                    <label>Alineadores, Puntales, Agujas y grampas: Revisar plomo y niveles</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de hormigón" %}
+                    <label>¿El material para el hormigón en el muro es el adecuado?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de instalaciones" %}
+                    <label>¿Los materiales de las instalaciones en el muro son correctos?</label><br>
+                {% else %}
+                    <label>¿El material para el muro cumple con los estándares?</label><br>
+                {% endif %}
+            {% elif seleccion.tipo == "Losa" %}
+                {% if seleccion.rol_supervisor == "Supervisor de enfierradura" %}
+                    <label>¿El material para la enfierradura en la losa es el adecuado?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de moldaje" %}
+                    <label>Nivelación puntales: verificar correcto aplomado y alineación (altura correcta)</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de hormigón" %}
+                    <label>¿El material para el hormigón en la losa es el adecuado?</label><br>
+                {% elif seleccion.rol_supervisor == "Supervisor de instalaciones" %}
+                    <label>¿Los materiales de las instalaciones en la losa son correctos?</label><br>
+                {% else %}
+                    <label>¿El material para la losa cumple con los estándares?</label><br>
+                {% endif %}
+            {% endif %}
+
+        {% else %}
+            <label>{{ key }}:</label><br>
+        {% endif %}
+        
+        <input type="text" value="{{ value }}" readonly><br>
+    {% endfor %}
+{% else %}
+    <p>No hay respuestas disponibles.</p>
+{% endif %}
+
+                    {% if usuario.rol == 'Jefe de terreno' %}
+                        <input type="radio" name="estado_{{ seleccion.id }}" value="aprobado" 
+                            {% if seleccion.aprobado %}checked{% endif %} onclick="toggleRechazoMessage({{ loop.index }}, false)">
+                        Aprobar
+                        <input type="radio" name="estado_{{ seleccion.id }}" value="reprobado" 
+                            {% if seleccion.reprobado %}checked{% endif %} onclick="toggleRechazoMessage({{ loop.index }}, true)">
+                        Reprobar
+                        <input type="radio" name="estado_{{ seleccion.id }}" value="pendiente" 
+                            {% if not seleccion.aprobado and not seleccion.reprobado %}checked{% endif %} onclick="toggleRechazoMessage({{ loop.index }}, false)">
+                        Pendiente
+                    {% endif %}
+
+                    <!-- Razón de rechazo (solo visible si se selecciona "Reprobar") -->
+<div id="rechazo-message-{{ loop.index }}" style="display: none;">
+    <label for="rechazo-razon-{{ seleccion.id }}">Razón de rechazo:</label>
+    <textarea name="razon_rechazo_{{ seleccion.id }}" rows="3">{{ seleccion.razon_rechazo }}</textarea>
+</div>
+
+
+                </fieldset>
+            </div>
+        </div>
+    {% endfor %}
+    <!-- Botón para guardar los cambios -->
+    <button type="submit">Guardar Cambios</button>
+</form>
+{% else %}
+<p>No hay selecciones registradas.</p>
+{% endif %}
+        </div>
+
+<div class="contenedor-principal">
+<div class="calendar-container">
+    <button id="toggle-calendar" class="calendar-toggle">📅</button>
+    <div id="calendar-content" class="calendar-content" style="display: none;">
+        <h2 id="calendar-title">Calendario</h2>
+        <div class="calendar-controls">
+            <button id="prev-month" class="calendar-button">◀</button>
+            <button id="next-month" class="calendar-button">▶</button>
+        </div>
+        <div class="calendar-header">
+            <span>Lunes</span>
+            <span>Martes</span>
+            <span>Miércoles</span>
+            <span>Jueves</span>
+            <span>Viernes</span>
+            <span>Sábado</span>
+            <span>Domingo</span>
+        </div>
+        <div id="calendar-grid" class="calendar-grid"></div>
+
+        <div id="note-section" class="note-section" style="display: none;">
+            <h3>Notas para <span id="selected-date"></span></h3>
+            <ul id="notes-list"></ul>
+            <form id="note-form">
+                <input type="hidden" id="date" name="date">
+                <label for="note">Agregar nota:</label>
+                <textarea id="note" name="note" rows="2" required></textarea>
+                <button type="submit">Guardar Nota</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="calculadora-container minimizado" id="calculadora-container">
+    <h2 id="calculadora-title" onclick="minimizarMaximizarCalculadora()">🧮</h2>
+    <div class="calculadora-display">
+        <input type="text" id="calculadora-display" readonly>
+    </div>
+    <div class="calculadora-botones">
+        <button onclick="insertar('7')">7</button>
+        <button onclick="insertar('8')">8</button>
+        <button onclick="insertar('9')">9</button>
+        <button onclick="insertar('/')">÷</button>
+
+        <button onclick="insertar('4')">4</button>
+        <button onclick="insertar('5')">5</button>
+        <button onclick="insertar('6')">6</button>
+        <button onclick="insertar('*')">×</button>
+
+        <button onclick="insertar('1')">1</button>
+        <button onclick="insertar('2')">2</button>
+        <button onclick="insertar('3')">3</button>
+        <button onclick="insertar('-')">−</button>
+
+        <button onclick="insertar('0')">0</button>
+        <button onclick="insertar('.')">.</button>
+        <button onclick="calcular()">=</button>
+        <button onclick="insertar('+')">+</button>
+
+        <button onclick="limpiar()" class="clear">C</button>
+    </div>
+</div>
+
+    <div class="sidebar">
+<a href="{{ url_for('respuestas_selecciones') }}" class="{% if request.endpoint == 'respuestas_selecciones' %}active{% endif %}" title="Control de calidad">
+    <div class="icon-circle">👷‍♂️</div>
+</a>
+    <a href="{{ url_for('avancejefe') }}" class="btn-avance" title="Registro de avance">
+        <div class="icon-circle">📋</div>
+    </a>
+    <a href="{{ url_for('jefeavancecalculado') }}" class="btn-avance" title="Avance">
+        <div class="icon-circle">📈</div>
+    </a>
+    <a href="{{ url_for('nuevojefe') }}" class="btn-avance" title="Registro de verificaciones">
+        <div class="icon-circle">✅</div>
+    </a>
+        <a href="{{ url_for('logout') }}" title="Cerrar Sesión">
+            <div class="icon-circle">🔴</div>
+        </a>
+</div>
+
+    </div>
+
+</body>
+</html>
+
+
+
+

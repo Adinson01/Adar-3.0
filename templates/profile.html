@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario - Diseño Mejorado</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        /* Ajustes generales */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+
+
+        /* Encabezado */
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 8px;
+            text-align: left;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+
+
+        /* Barra lateral */
+        .sidebar {
+            width: 48px;
+            background-color: #2c2c2c;
+            padding: 60px 0;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0px;
+            margin: 15px 0;
+            background-color: #2c2c2c;
+            color: #e9e9e9;
+            text-align: center;
+            border-radius: 0%;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #007bff;
+        }
+
+
+
+        /* Contenedor principal */
+.main-container {
+    margin-top: 80px;
+    display: flex;
+    justify-content: space-between; /* Para que los contenedores estén alineados horizontalmente */
+    padding-left: 60px;
+    padding-right: 20px;
+    padding-bottom: 50px;
+    width: 100%;
+    gap: 20px; /* Opcional: Añadir un espacio entre los contenedores */
+    box-sizing: border-box;
+}
+
+/* Contenedor de formulario */
+.form-container {
+    flex: 1; /* Ocupa el espacio restante */
+    padding: 10px;
+    margin-bottom: 20px;
+    margin-top: -70px;
+    color: white;
+    box-sizing: border-box;
+}
+
+/* Contenedor de notificaciones */
+.notificaciones-container {
+    width: 280px; /* Define un ancho fijo para las notificaciones */
+    padding: 15px;
+    color: black;
+    margin-top: 0; /* Elimina el margen superior */
+    box-sizing: border-box;
+    background-color: #f5f5dc; /* Color de fondo suave tirado a crema */
+}
+
+    /* Hacer que el contenedor de notificaciones tenga scroll cuando exceda el límite de altura */
+    .question-container {
+        max-height: 500px; /* Limitar la altura del contenedor */
+        overflow-y: auto;  /* Habilitar el desplazamiento vertical */
+    }
+
+        /* Estilos de la cámara */
+        .camera-input {
+            display: none;z
+        }
+
+        .camera-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0px;
+            position: relative;
+            top: 50px;
+        }
+
+.camera-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #007bff;  /* Contorno azul alrededor de la imagen */
+}
+
+
+    @keyframes slideIn {
+        0% {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+        /* Estilo para el nombre y rol del usuario */
+        .user-details h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 10px 0 5px;
+            margin-left: 20px;
+            color: #000000;
+            text-align: center;
+        }
+
+        .user-details h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 0;
+            margin-left: 20px;
+            color: #6c757d;
+            text-align: center;
+        }
+
+/* Ajustes responsivos para pantallas móviles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;                  /* Ocupa todo el ancho en móviles */
+        height: 30px;                  /* Ajusta la altura de la barra */
+        position: fixed;
+        bottom: 0;                     /* Coloca la barra en la parte inferior */
+        top: auto;                     /* Elimina la posición superior */
+        flex-direction: row;           /* Cambia a disposición horizontal */
+        justify-content: space-around; /* Distribuye los íconos horizontalmente */
+        padding: 10px 0;               /* Ajusta el padding */
+    }
+
+    .main-container {
+        padding-bottom: 80px;          /* Evita que el contenido sea ocultado por la barra inferior */
+    }
+}
+            .sidebar a {
+                margin: 0;
+                padding: 12px;
+            }
+
+            .header {
+                padding: 10px;
+                justify-content: center;
+            }
+
+            .main-container {
+                flex-direction: column;
+                padding: 20px;
+                margin-top: 60px;
+            }
+
+            .camera-container {
+                margin: 20px 0;
+            }
+
+            .form-container {
+                order: 1;
+                padding: 0;
+            }
+
+
+
+.registro-titulo {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: black;
+    text-align: center;
+}
+
+            .user-details h1, .user-details h2 {
+                font-size: 1.2rem;
+                text-align: center;
+            }
+        }
+
+    /* Estilo para el cuestionario */
+    .questionnaire-container {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    .questionnaire-container h3 {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        color: #000000;
+    }
+
+    .question {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        color: #000000;
+    }
+
+    .question label {
+        margin-right: 10px;
+        font-weight: 500;
+        color: #000000; 
+   }
+
+
+    .question button {
+        margin-right: 5px;
+        padding: 5px 10px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .question button:hover {
+        background-color: #0056b3;
+    }
+
+
+.questionnaire-container {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.question label {
+    flex: 1;
+    font-weight: 500;
+    color: #000000 !important;
+}
+
+.options {
+    display: flex;
+    gap: 10px;
+}
+
+.options button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+}
+
+.options button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos generales para las preguntas */
+.question-container {
+    padding: 5px;
+    margin-bottom: px;
+    border-radius: 8px;
+    background-color: #f9f9f9;  /* Color de fondo por defecto */
+    color: #000;  /* Color de texto predeterminado (negro) */
+    transition: background-color 0.3s ease;  /* Transición suave */
+}
+
+/* Color específico para la pregunta de seguridad */
+#safetyCheckContainer {
+    color: #000;  /* Color de texto negro */
+}
+
+/* Color específico para la pregunta de calidad de construcción */
+#qualityCheckContainer {
+    color: #000;  /* Color de texto negro */
+}
+
+/* Color específico para la pregunta de material adecuado */
+#materialCheckContainer {
+    color: #000;  /* Color de texto negro */
+}
+
+/* Cambiar el color cuando se pasa el mouse */
+.question-container:hover {
+    background-color: #f0f0f0;  /* Color más neutro en hover */
+    color: #000;  /* Aseguramos que el texto sea negro en hover */
+}
+
+/* Asegurar que los labels dentro de las preguntas también tengan el color correcto */
+.question-container label {
+    color: inherit;  /* Tomar el color del contenedor para los labels */
+}
+
+/* Asegurar que los selects también respeten el color */
+.question-container select {
+    color: inherit;  /* Tomar el color del contenedor para los select */
+}
+
+/* Estilo para el ícono activo */
+.sidebar a.active .icon-circle {
+    background-color: #007bff;  /* Color de fondo azul */
+    color: white;               /* Cambiar el color del ícono a blanco */
+    border-radius: 100%;         /* Hacer el ícono redondo */
+    padding: 2px;              /* Agregar algo de padding para hacer el ícono más grande */
+}
+
+/* Estilo para los íconos no activos */
+.sidebar a .icon-circle {
+    color: #e9e9e9;  /* Color gris claro para los íconos no activos */
+    transition: background-color 0.3s ease, color 0.3s ease;  /* Transición suave */
+}
+
+/* Hover para los íconos */
+.sidebar a:hover .icon-circle {
+    background-color: #444;  /* Fondo gris oscuro en hover */
+    color: white;             /* Cambiar el color del ícono a blanco en hover */
+}
+
+        /* Toggle estilizado */
+        .toggle-button {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #black;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+            margin-bottom: 10px;
+        }
+
+        .toggle-button:hover {
+            background: linear-gradient(90deg, #0056b3, #003f8c);
+            transform: translateY(-2px);
+        }
+
+        /* Iconos para expandir/contraer */
+        .toggle-button .icon {
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-button.collapsed .icon {
+            transform: rotate(90deg);
+        }
+
+        /* Contenedor de detalles */
+        .details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .details.active {
+            display: block;
+        }
+
+        /* Input estilizado */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        fieldset {
+            border: none;
+            margin: 10px 0;
+            padding: 0;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+/* Ajustes responsivos para pantallas móviles */
+@media (max-width: 768px) {
+    .notificaciones-container {
+        width: 100%; /* Ocupa todo el ancho de la pantalla */
+        padding: 1px; /* Espaciado interno */
+        margin-top: 20px; /* Espaciado superior */
+        box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
+        background-color: #f0f0f0; /* Color de fondo suave (gris claro) */
+    }
+}
+
+
+.siguiente-supervisor {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f0f8ff;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #0056b3;
+}
+
+
+/* Contenedor de fecha y hora */
+.date-time-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Ícono de reloj */
+.date-time-container i {
+    color: #007bff;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+/* Fecha y hora */
+.date-time-container .date {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+}
+
+.date-time-container .time {
+    font-size: 14px;
+    color: #666;
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Encabezado con título ADAR a la izquierda y subtítulo a la derecha -->
+    <header class="header">
+        <div class="title">
+            ADAR <br>
+        </div>
+        <div class="subtitle">
+            
+        </div>
+    </header>
+
+        <!-- Barra lateral izquierda con los botones -->
+<div class="sidebar">
+    <!-- Enlace al perfil con la clase activa cuando esté en la página de perfil -->
+    <a href="{{ url_for('profile') }}" class="{% if request.endpoint == 'profile' %}active{% endif %}" title="Perfil de usuario">
+        <div class="icon-circle">👷‍♂️</div> <!-- Ícono de perfil -->
+    </a>
+    <a href="{{ url_for('avance') }}" class="btn-avance" title="Registro de avance">
+        <div class="icon-circle">📋</div>
+    </a>
+    <a href="{{ url_for('avance_calculado') }}" class="btn-avance" title="Cálculo de avance">
+        <div class="icon-circle">📈</div>
+    </a>
+    <a href="{{ url_for('rendimiento') }}" class="btn-avance" title="Rendimiento">
+        <div class="icon-circle">🛠️</div>
+    </a>
+    <a href="{{ url_for('nuevo_ruta') }}" class="logout" title="Verificado">
+        <div class="icon-circle">✅</div>
+    </a>
+    <a href="{{ url_for('logout') }}" class="logout" title="Cerrar Sesión">
+        <div class="icon-circle">🔴</div>
+    </a>
+</div>
+
+        <div class="user-info">
+        <div class="camera-container">
+            <label for="foto" class="camera-label">
+                <!-- Foto de perfil -->
+                <img id="foto-perfil" src="" alt="Foto de perfil" class="camera-icon">
+            </label>
+            <input type="file" name="foto_perfil" accept="image/*" id="foto" class="camera-input" onchange="mostrarPrevisualizacion(event)">
+         
+        <div class="user-details">
+            <h1 id="nombre-usuario">{{ nombre }} </h1>
+            <h2 id="rol-usuario">{{ rol }}</h2>
+        </div>
+
+    </div>
+</div>
+
+<div class="notificaciones-container">
+    <main style="margin-top: 70px;"> <!-- Ajuste de margen superior para evitar solapamiento con el encabezado -->
+<div class="date-time-container">
+    <i class="fas fa-clock"></i>
+    <div>
+        <div class="date" id="fecha-display"></div>  <!-- Aquí se mostrará la fecha actual -->
+        <div class="time" id="hora-display"></div>   <!-- Aquí se mostrará la hora actual -->
+    </div>
+</div>
+
+        <h2 class="registro-titulo">Notificaciones</h2>
+        <div class="question-container" id="notifications-container">
+            {% if selecciones %}
+            <form>
+                {% for seleccion in selecciones %}
+                <div class="section-container notification" style="margin-bottom: 15px;">
+                    <p class="toggle-button" onclick="toggleDetails('details-{{ loop.index }}', {{ seleccion.id }})" style="display: flex; justify-content: space-between; align-items: center; margin: 0;">
+                        <span>
+                            🔔 {{ seleccion.rol_supervisor }} - Piso {{ seleccion.elevacion }} {{ seleccion.tipo }} {{ seleccion.seccion }}
+                            <br> <!-- Salto de línea -->        
+                            {% if seleccion.aprobado %}
+                            <span style="font-weight: bold; margin-left: 25px; font-size: 16px; color: #007bff;">
+                                Siguiente: 
+                                {% if seleccion.tipo == 'Muro' %}
+                                    {% if seleccion.rol_supervisor == 'Supervisor de instalaciones' %}
+                                        Enfierradura
+                                    {% elif seleccion.rol_supervisor == 'Supervisor de enfierradura' %}
+                                        Moldaje
+                                    {% elif seleccion.rol_supervisor == 'Supervisor de moldaje' %} 
+                                        Hormigón
+                                    {% elif seleccion.rol_supervisor == 'Supervisor de hormigón' %}
+                                        No hay siguiente
+                                    {% endif %}
+                                {% elif seleccion.tipo == 'Losa' %}
+                                    {% if seleccion.rol_supervisor == 'Supervisor de moldaje' %}
+                                        Enfierradura e Instalaciones
+                                    {% elif seleccion.rol_supervisor == 'Supervisor de enfierradura' %}
+                                        Instalaciones
+                                    {% elif seleccion.rol_supervisor == 'Supervisor de instalaciones' %}
+                                        Enfierradura
+                                    {% elif seleccion.rol_supervisor == 'Supervisor de hormigón' %}
+                                        No hay siguiente
+                                    {% endif %}
+                                {% endif %}
+                            </span>
+                            {% endif %}
+                        </span>
+
+                        <span style="display: flex; justify-content: flex-end;">
+                            {% if seleccion.aprobado %}
+                            <span style="color: green;">Aprobado</span>
+                            {% elif seleccion.reprobado %}
+                            <span style="color: red;">Reprobado</span>
+                            {% else %}
+                            <span style="color: orange;">Pendiente</span>
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+                {% endfor %}
+            </form>
+            {% else %}
+            <p>No hay selecciones registradas.</p>
+            {% endif %}
+        </div>
+    </main>
+</div>
+
+    <!-- Contenedor principal que contiene el formulario de selecciones y las notificaciones -->
+    <div class="main-container">
+        <!-- Contenedor del formulario de selecciones -->
+        <div class="form-container">
+            <div class="user-info">
+            </div>
+ 
+
+<h2 class="registro-titulo">Registro</h2>
+<div class="question-container">
+<form method="POST" action="{{ url_for('profile') }}" id="profile-form" enctype="multipart/form-data" onsubmit="return validarRegistroFormulario()">
+
+    <!-- Fecha y hora (campo solo lectura) -->
+                <input type="hidden" name="rol_supervisor" id="rol_supervisor" value="{{ rol }}">
+
+
+
+
+
+                    <select name="elevacion" id="elevacion" required class="input-field">
+                        <option value="" disabled selected>Selecciona un tipo</option>
+
+
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+
+                            <select name="tipo" id="tipo" required class="input-field" onchange="actualizarSecciones(); establecerPorcentaje(); actualizarEtapa()">
+                                <option value="" deshabilitado seleccionado>Selecciona un tipo</option>
+                                <option value="Muro">Muro</option>
+                                <option value="Losa">Losa</option>
+                            </select>
+<select name="seccion" id="seccion" required class="input-field" onchange="asignarPorcentaje()">
+    <option value="" disabled selected>Selecciona una sección</option>
+    <option value="1">Losa 1</option>
+    <option value="2">Losa 2</option>
+    <option value="3">Losa 3</option>
+    <option value="4">Losa 4</option>
+    <option value="A">Muro A</option>
+    <option value="B">Muro B</option>
+    <option value="C">Muro C</option>
+    <option value="D">Muro D</option>
+    <option value="E">Muro E</option>
+</select>
+
+<select name="porcentaje" id="porcentaje" required class="input-field" style="display:none;">
+    <!-- El valor se asignará automáticamente -->
+</select>
+
+ <input type="file" name="foto" accept="image/*">  <!-- Campo para la foto -->
+
+    <input type="text" name="etapa" id="etapa" readonly style="display:none;">
+
+<h2 class="registro-titulo">Lista de verificaciones</h2>
+<!-- Pregunta con texto dinámico según el rol -->
+<div class="question-container" id="safetyCheckContainer">
+    <label for="safetyCheck" id="safetyCheckLabel">Verificación 1</label>
+    <select name="respuestas[safetyCheck]" id="safetyCheck" required>
+        <option value="Si">Sí</option>
+        <option value="No">No</option>
+        <option value="No aplica">No aplica</option>
+    </select>
+</div>
+
+<div class="question-container" id="qualityCheckContainer">
+    <label for="qualityCheck" id="qualityCheckLabel">Verificación 2</label>
+    <select name="respuestas[qualityCheck]" id="qualityCheck" required>
+        <option value="Si">Sí</option>
+        <option value="No">No</option>
+        <option value="No aplica">No aplica</option>
+    </select>
+</div>
+
+<div class="question-container" id="materialCheckContainer">
+    <label for="materialCheck" id="materialCheckLabel">Verificación 3</label>
+    <select name="respuestas[materialCheck]" id="materialCheck" required>
+        <option value="Si">Sí</option>
+        <option value="No">No</option>
+        <option value="No aplica">No aplica</option>
+    </select>
+</div>
+
+    <input type="submit" value="Guardar Selecciones" class="button">
+</form>
+
+                </div>
+            </div>
+<script>
+    let moldajeCompletado = false;
+    let enfierraduraCompletada = false;
+    let instalacionesCompletadas = false;
+
+function establecerFechaHoraActual() {
+    const fechaDisplay = document.getElementById('fecha-display');
+    const horaDisplay = document.getElementById('hora-display');
+    
+    // Obtener la fecha y hora actual
+    const ahora = new Date();
+
+    // Ajuste para la zona horaria de Chile
+    const opcionesFecha = {
+        timeZone: 'America/Santiago',
+        year: 'numeric',
+        month: 'long',  // Mes en formato largo (ej: diciembre)
+        day: 'numeric'
+    };
+    
+    const opcionesHora = {
+        timeZone: 'America/Santiago',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    };
+
+    // Formatear la fecha y la hora según la zona horaria de Chile
+    const fechaChile = new Intl.DateTimeFormat('es-CL', opcionesFecha).format(ahora);
+    const horaChile = new Intl.DateTimeFormat('es-CL', opcionesHora).format(ahora);
+    
+    // Mostrar la fecha en formato "11 de diciembre de 2024"
+    fechaDisplay.textContent = fechaChile;
+
+    // Mostrar la hora en formato "12:30 PM"
+    horaDisplay.textContent = horaChile;
+}
+
+// Establecer la fecha y hora al cargar la página
+window.onload = establecerFechaHoraActual;
+
+// Actualizar la fecha y hora cada minuto
+setInterval(establecerFechaHoraActual, 600); // 60000 ms = 1 minuto
+
+
+        // Función para actualizar las secciones basadas en el tipo seleccionado
+        function actualizarSecciones() {
+            const tipo = document.getElementById('tipo').value;
+            const seccionSelect = document.getElementById('seccion');
+            seccionSelect.innerHTML = ''; 
+
+            let opciones;
+
+            if (tipo === 'Losa') {
+                opciones = ['1', '2', '3', '4'];
+            } else if (tipo === 'Muro') {
+                opciones = ['A', 'B', 'C', 'D', 'E'];
+            }
+
+            opciones.forEach(function(opcion) {
+                const optionElement = document.createElement('option');
+                optionElement.value = opcion;
+                optionElement.textContent = opcion;
+                seccionSelect.appendChild(optionElement);
+            });
+        }
+
+
+
+function asignarPorcentaje() {
+    const seccionSeleccionada = document.getElementById('seccion').value;  // Obtiene la sección seleccionada
+    const porcentajeSelect = document.getElementById('porcentaje');  // Obtiene el campo de porcentaje
+
+    // Definir los porcentajes según la sección seleccionada
+    let porcentaje;
+
+    if (['1', '2', '3', '4'].includes(seccionSeleccionada)) {
+        // Si la sección es una losa (1, 2, 3, 4), asignar 25%
+        porcentaje = 25;
+    } else if (['A', 'B'].includes(seccionSeleccionada)) {
+        // Si la sección es un muro (A, B), asignar 20%
+        porcentaje = 20;
+    } else if (['C', 'D', 'E'].includes(seccionSeleccionada)) {
+        // Si la sección es un muro (C, D, E), asignar 5%
+        porcentaje = 5;
+    }
+
+    // Asignar el porcentaje al campo
+    porcentajeSelect.innerHTML = `<option value="${porcentaje}">${porcentaje}%</option>`;
+}
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Limitar la visibilidad a las 5 notificaciones más recientes
+        const notifications = document.querySelectorAll('.notification');
+        const maxNotifications = 5;
+
+        // Ocultar las notificaciones más antiguas
+        notifications.forEach((notification, index) => {
+            if (index >= maxNotifications) {
+                notification.style.display = "none";  // Ocultar las notificaciones adicionales
+            }
+        });
+
+        // Si hay más de 10, habilitar el scroll para el contenedor
+        const container = document.getElementById('notifications-container');
+        if (notifications.length > maxNotifications) {
+            container.style.maxHeight = "500px";  // Ajustar la altura máxima del contenedor
+        }
+    });
+
+        // Función para actualizar la etapa según el tipo seleccionado
+        function actualizarEtapa() {
+            const tipo = document.getElementById('tipo').value;
+            const etapaInput = document.getElementById('etapa');
+
+            if (tipo === 'Losa') {
+                etapaInput.value = 'Supervisor de Moldaje > Supervisor de Instalaciones > Supervisor de Enfierradura > Supervisor de Hormigón';
+            } else if (tipo === 'Muro') {
+                etapaInput.value = 'Supervisor de Instalaciones > Supervisor de Enfierradura > Supervisor de Moldaje > Supervisor de Hormigón';
+            }
+        }
+
+        // Función para validar el registro antes de enviar el formulario
+function validarRegistro() {
+    const elevacion = document.getElementById('elevacion').value;
+    const tipo = document.getElementById('tipo').value;
+    const seccion = document.getElementById('seccion').value;
+    const rolSupervisor = document.getElementById('rol_supervisor').value;
+
+    // Verificar si la combinación de elevación, tipo y sección ya está registrada
+    let registros = JSON.parse(localStorage.getItem('avances')) || [];
+    const existeRegistro = registros.some(registro => 
+        registro.elevacion === elevacion && 
+        registro.tipo === tipo && 
+        registro.seccion === seccion
+    );
+
+    if (existeRegistro) {
+        alert('Ya se ha registrado esta combinación de elevación, tipo y sección.');
+        return false;
+    }
+
+    // Guardar los datos en el LocalStorage
+    registros.push({
+        elevacion: elevacion,
+        tipo: tipo,
+        seccion: seccion,
+        fecha: document.getElementById('fecha').value,
+        porcentaje: document.getElementById('porcentaje').value,
+        etapa: document.getElementById('etapa').value,
+        rol_supervisor: rolSupervisor
+    });
+
+    localStorage.setItem('avances', JSON.stringify(registros));
+
+    return true; // Permitir que el formulario se envíe
+}
+
+
+      // Función para cargar la imagen de perfil desde localStorage al cargar la página
+        window.onload = function() {
+            const imagenPerfil = localStorage.getItem('fotoPerfil');
+            if (imagenPerfil) {
+                document.getElementById('foto-perfil').src = imagenPerfil;
+            }
+        };
+
+        // Función para mostrar la previsualización de la imagen y guardarla en localStorage
+        function mostrarPrevisualizacion(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageSrc = e.target.result;
+                    // Actualiza la imagen de previsualización
+                    document.getElementById('foto-perfil').src = imageSrc;
+                    // Guarda la imagen en localStorage
+                    localStorage.setItem('fotoPerfil', imageSrc);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+
+function actualizarPreguntas() {
+    const tipo = document.getElementById('tipo').value;
+    const rol = "{{ rol }}";  // Obtener el rol desde el template
+    const safetyCheckLabel = document.getElementById("safetyCheckLabel");
+    const qualityCheckLabel = document.getElementById("qualityCheckLabel");
+    const materialCheckLabel = document.getElementById("materialCheckLabel");
+
+    // Cambiar las preguntas según el tipo y el rol
+    if (tipo === 'Losa') {
+        if (rol === "Supervisor de moldaje") {
+            safetyCheckLabel.textContent = "Instalación de marcos: correcta instalación de puntales de losa";
+            qualityCheckLabel.textContent = "Cabezales: chequear existencia y correcta instalación";
+            materialCheckLabel.textContent = "Nivelación puntales: verificar correcto aplomado y alineación (altura correcta)";
+        } else if (rol === "Supervisor de enfierradura") {
+            safetyCheckLabel.textContent = "Doblado: verificar longitud de doblado según lo requerido en planos de estructuras de proyecto";
+            qualityCheckLabel.textContent = "Limpieza: barras limpias de sustancias que afecten la adherencia del hormigón";
+            materialCheckLabel.textContent = "Malla vertical: verificar diámetros, cantidad y separación según indique planos de estructuras";
+        } else if (rol === "Supervisor de hormigón") {
+            safetyCheckLabel.textContent = "Docilidad: Realización prueba cono de Abrams, chequear que sea lo solicitado según especificación de proyecto";
+            qualityCheckLabel.textContent = "Vaciado: chequear correcta ejecución del trabajo";
+            materialCheckLabel.textContent = "Distribución: esparcimiento uniforme";
+        } else if (rol === "Supervisor de instalaciones") {
+            safetyCheckLabel.textContent = "Instalación de caños: verificar correcta colocación de caños según planos";
+            qualityCheckLabel.textContent = "Conexiones: chequear que las conexiones estén bien hechas y sean seguras";
+            materialCheckLabel.textContent = "Soportes: verificar que los soportes para las instalaciones estén correctamente instalados";
+        }
+    } else if (tipo === 'Muro') {
+        if (rol === "Supervisor de moldaje") {
+            safetyCheckLabel.textContent = "Desmoldante: Aplicación de desmoldante en la superficie del moldaje, limpia y seca";
+            qualityCheckLabel.textContent = "Montaje: Verificar firmeza y espesor entre paredes";
+            materialCheckLabel.textContent = "Alineadores, Puntales, Agujas y grampas: Revisar plomo y niveles";
+        } else if (rol === "Supervisor de enfierradura") {
+            safetyCheckLabel.textContent = "Doblado: verificar longitud de doblado según lo requerido en planos de estructuras de proyecto";
+            qualityCheckLabel.textContent = "Limpieza: barras limpias de sustancias que afecten la adherencia del hormigón";
+            materialCheckLabel.textContent = "Malla vertical: verificar diámetros, cantidad y separación según indique planos de estructuras";
+        } else if (rol === "Supervisor de hormigón") {
+            safetyCheckLabel.textContent = "Docilidad: Realización prueba cono de Abrams, chequear que sea lo solicitado según especificación de proyecto";
+            qualityCheckLabel.textContent = "Vaciado: chequear correcta ejecución del trabajo";
+            materialCheckLabel.textContent = "Compactación: Chequear correcta ejecución, introducción vertical y extracción lenta, mediante vibrador de inmersión";
+        } else if (rol === "Supervisor de instalaciones") {
+            safetyCheckLabel.textContent = "Instalación de caños: verificar correcta colocación de caños según planos";
+            qualityCheckLabel.textContent = "Conexiones: chequear que las conexiones estén bien hechas y sean seguras";
+            materialCheckLabel.textContent = "Soportes: verificar que los soportes para las instalaciones estén correctamente instalados";
+        }
+    }
+}
+
+    // Llamar a la función actualizarPreguntas cuando cambie el tipo de sección
+    document.getElementById('tipo').addEventListener('change', actualizarPreguntas);
+
+function toggleDetails(id, protocoloId) {
+    const details = document.getElementById(id);
+    const isHidden = details.style.display === 'none';
+
+    if (isHidden) {
+        // Mostrar detalles y actualizar estado dinámicamente
+        fetch(`/obtener_estado_protocolo/${protocoloId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Actualiza el estado dinámicamente
+                    document.getElementById('approval-status-' + protocoloId).innerHTML = `
+                        <span style='color: ${data.estado === "Aprobado" ? "green" : "red"};'>${data.estado}</span>
+                    `;
+                } else {
+                    console.error('Error al obtener el estado:', data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Alternar visibilidad de los detalles
+    details.style.display = isHidden ? 'block' : 'none';
+}
+
+    // Función para mostrar el mensaje adicional en línea
+    document.addEventListener("DOMContentLoaded", function () {
+        // Itera sobre todos los elementos de estado de aprobación
+        const approvalStatuses = document.querySelectorAll('[id^="approval-status-"]');
+        approvalStatuses.forEach(function (statusElement) {
+            // Verifica si contiene "Aprobado"
+            if (statusElement.innerText.includes("Aprobado")) {
+                const id = statusElement.id.split("-")[2]; // Extrae el ID del elemento
+                const nextTurnMessage = document.getElementById(`next-turn-${id}`);
+                if (nextTurnMessage) {
+                    nextTurnMessage.style.display = "block"; // Muestra el mensaje como un bloque debajo
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
+

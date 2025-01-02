@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Porcentaje de Avance</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Porcentaje de Avance por Elevación y Tipo</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Elevación</th>
+                    <th>Tipo</th>
+                    <th>Porcentaje de Avance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for (elevacion, tipo), porcentaje in avances.items() %}
+                    <tr>
+                        <td>{{ elevacion }}</td>
+                        <td>{{ tipo }}</td>
+                        <td>{{ porcentaje }}%</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('profile') }}" class="btn-avance">Volver al Perfil</a>
+    </div>
+</body>
+</html>
+

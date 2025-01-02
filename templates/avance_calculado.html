@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avance Calculado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+ /* Estilos globales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Evitar desplazamiento horizontal */
+        }
+
+        /* Encabezado */
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 8px;
+            text-align: left;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        /* Contenedor principal */
+        .form-container {
+            margin-top: 70px; /* Para evitar el solapamiento con el encabezado */
+            padding: 20px;
+            background-color: #f5f5f5;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Estilos para la tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #007bff; /* Azul eléctrico */
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f1f1f1; /* Gris suave para filas pares */
+        }
+
+        table tr:nth-child(odd) {
+            background-color: #ffffff; /* Blanco para filas impares */
+        }
+
+        table tr:hover {
+            background-color: #e2e2e2; /* Fondo claro al pasar el ratón */
+        }
+
+        /* Barra de progreso */
+        progress {
+            width: 100%; /* La barra ocupará el 100% del ancho disponible */
+            height: 30px; /* Ajusta la altura de la barra */
+            margin-top: 10px;
+            background-color: #e0e0e0; /* Color de fondo */
+            border-radius: 5px; /* Bordes redondeados */
+        }
+
+        progress[value] {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: #e0e0e0; /* Color de fondo de la barra */
+            border-radius: 5px;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: #4caf50; /* Color de la parte completada de la barra */
+            border-radius: 5px;
+        }
+
+
+        /* Estilo del gráfico */
+        .chart-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Barra lateral */
+        .sidebar {
+            width: 48px;
+            background-color: #2c2c2c;
+            padding: 60px 0;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0px;
+            margin: 15px 0;
+            background-color: #2c2c2c;
+            color: #e9e9e9;
+            text-align: center;
+            border-radius: 0%;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #007bff;
+        }
+
+/* Resaltar el enlace activo */
+.sidebar a.active .icon-circle {
+    background-color: #007bff;  /* Cambia el fondo a azul (puedes elegir el color que prefieras) */
+    border-radius: 50%;  /* Redondear el borde */
+    padding: 5px;  /* Añadir algo de espacio */
+}
+/* Ajustes responsivos para pantallas móviles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;                  /* Ocupa todo el ancho en móviles */
+        height: 30px;                  /* Ajusta la altura de la barra */
+        position: fixed;
+        bottom: 0;                     /* Coloca la barra en la parte inferior */
+        top: auto;                     /* Elimina la posición superior */
+        flex-direction: row;           /* Cambia a disposición horizontal */
+        justify-content: space-around; /* Distribuye los íconos horizontalmente */
+        padding: 10px 0;               /* Ajusta el padding */
+    }
+
+.registro-titulo {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: black;
+    text-align: center;
+}
+    </style>
+</head>
+<body>
+    <!-- Encabezado -->
+    <header class="header">
+        <div class="title">ADAR</div>
+        <div class="subtitle">Avance de Obra 📈</div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main style="margin-top: 70px;">
+        <div class="form-container">
+
+            <!-- Avance total -->
+            <div style="margin-top: 20px;">
+                <h2 class="registro-titulo">Avance Total: {{ avance_completo }}%</h2>
+                <progress value="{{ avance_completo }}" max="100"></progress>
+            </div>
+
+            <!-- Tabla de selecciones -->
+            {% if selecciones %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Piso</th>
+                        <th>Tipo</th>
+                        <th>Fecha de Inicio</th>
+                        <th>Fecha de Término</th>
+                        <th>Días</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for seleccion in selecciones %}
+                    <tr>
+                        <td>{{ seleccion.elevacion }}</td>
+                        <td>{{ seleccion.tipo }}</td>
+                        <td>{{ seleccion.fecha_inicio.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ seleccion.fecha_termino.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ seleccion.diferencia_dias }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No hay selecciones registradas.</p>
+            {% endif %}
+
+            <!-- Gráfico -->
+            <div class="chart-container">
+                <canvas id="avanceChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+
+<div class="sidebar">
+    <a href="{{ url_for('profile') }}" title="Perfil">
+        <div class="icon-circle">👷‍♂️</div>
+    </a>
+    <a href="{{ url_for('avance') }}" title="Registro de avance">
+        <div class="icon-circle">📋</div>
+    </a>
+    <a href="{{ url_for('avance_calculado') }}" class="{% if request.endpoint == 'avance_calculado' %}active{% endif %}" title="Cálculo de avance">
+        <div class="icon-circle">📈</div>
+    </a>
+    <a href="{{ url_for('rendimiento') }}" title="Rendimiento">
+        <div class="icon-circle">🛠️</div>
+    </a>
+    <a href="{{ url_for('nuevo_ruta') }}" class="logout" title="Verificado">
+        <div class="icon-circle">✅</div>
+    </a>
+    <a href="{{ url_for('logout') }}" title="Cerrar Sesión">
+        <div class="icon-circle">🔴</div>
+    </a>
+</div>
+
+
+<script>
+// Variables para las etiquetas, datos y detalles
+const labels = [{% for seleccion in selecciones %}"Piso {{ seleccion.elevacion }} {{ seleccion.tipo }}"{% if not loop.last %}, {% endif %}{% endfor %}];
+
+const data = [{% for seleccion in selecciones %}{{ seleccion.porcentaje }}{% if not loop.last %}, {% endif %}{% endfor %}];
+
+const details = [
+    {% for seleccion in selecciones %}
+    {
+        secciones: "{{ seleccion.secciones | join(', ') }}",
+        porcentaje: {{ seleccion.porcentaje }},
+        tipo: "{{ seleccion.tipo }}",
+        piso: "{{ seleccion.elevacion }}"
+    }{% if not loop.last %}, {% endif %}
+    {% endfor %}
+];
+
+
+    // Obtener el contexto del canvas
+    const ctx = document.getElementById('avanceChart').getContext('2d');
+
+    // Crear gradientes para las barras
+    const createGradient = (ctx, color1, color2) => {
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, color1);
+        gradient.addColorStop(1, color2);
+        return gradient;
+    };
+
+    // Gradientes de colores
+    const gradients = [
+        createGradient(ctx, '#FF6384', '#FF8C94'), // Rosa
+        createGradient(ctx, '#36A2EB', '#4BC0C0'), // Azul
+        createGradient(ctx, '#FFCE56', '#FFE084'), // Amarillo
+        createGradient(ctx, '#4BC0C0', '#85D5D1'), // Verde azulado
+        createGradient(ctx, '#9966FF', '#B89EFF'), // Morado
+    ];
+
+    const backgroundColors = Array.from({ length: labels.length }, (_, i) => gradients[i % gradients.length]);
+
+    // Crear el gráfico con Chart.js
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Porcentaje de Avance',
+                data: data,
+                backgroundColor: backgroundColors,
+                borderColor: '#333333',
+                borderWidth: 1.5,
+                borderRadius: 8,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)',
+                    },
+                    ticks: {
+                        color: '#333',
+                        font: {
+                            size: 12,
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        color: '#333',
+                        font: {
+                            size: 12,
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        color: '#333',
+                        font: {
+                            size: 14,
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const detail = details[context.dataIndex];
+                            return [
+                                `Secciones: ${detail.secciones}`,
+                                `Avance: ${detail.porcentaje}%`,
+                                `Tipo: ${detail.tipo}`,
+                                `Piso: ${detail.piso}`,
+                            ];
+                        }
+                    },
+                    backgroundColor: '#333333',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    titleFont: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 12
+                    },
+                    padding: 10
+                }
+            },
+            layout: {
+                padding: {
+                    top: 20,
+                    bottom: 10
+                }
+            }
+        }
+    });
+
+</script>
+
+
+</body>
+</html>
+
+

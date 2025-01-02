@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avance Calculado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+ /* Estilos globales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color:  #eceff1;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Evitar desplazamiento horizontal */
+        }
+
+        /* Encabezado */
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 8px;
+            text-align: left;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+/* Contenedor principal */
+.form-container {
+    margin-top: 70px;
+    padding: 20px;
+    background-color: #eceff1; /* Gris muy claro */
+    color: #000000; /* Gris oscuro para el texto */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    max-width: 1000px;
+    margin-bottom: 50px; /* Ajusta según la altura de tu barra horizontal */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+
+
+
+        /* Estilos para la tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #007bff; /* Azul eléctrico */
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f1f1f1; /* Gris suave para filas pares */
+        }
+
+        table tr:nth-child(odd) {
+            background-color: #ffffff; /* Blanco para filas impares */
+        }
+
+        table tr:hover {
+            background-color: #e2e2e2; /* Fondo claro al pasar el ratón */
+        }
+
+        /* Estilos para los contenedores de avance */
+        .avance-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .avance-container progress {
+            width: 100%;
+            height: 30px;
+            margin-top: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+        }
+
+        /* Barra de progreso */
+        progress {
+            width: 100%; /* La barra ocupará el 100% del ancho disponible */
+            height: 30px; /* Ajusta la altura de la barra */
+            margin-top: 10px;
+            background-color: #e0e0e0; /* Color de fondo */
+            border-radius: 5px; /* Bordes redondeados */
+        }
+
+        progress[value] {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: #e0e0e0; /* Color de fondo de la barra */
+            border-radius: 5px;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: #4caf50; /* Color de la parte completada de la barra */
+            border-radius: 5px;
+        }
+
+
+        /* Estilo del gráfico */
+        .chart-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Barra lateral */
+        .sidebar {
+            width: 48px;
+            background-color: #2c2c2c;
+            padding: 60px 0;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0px;
+            margin: 15px 0;
+            background-color: #2c2c2c;
+            color: #e9e9e9;
+            text-align: center;
+            border-radius: 0%;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #007bff;
+        }
+
+/* Resaltar el enlace activo */
+.sidebar a.active .icon-circle {
+    background-color: #007bff;  /* Cambia el fondo a azul (puedes elegir el color que prefieras) */
+    border-radius: 50%;  /* Redondear el borde */
+    padding: 5px;  /* Añadir algo de espacio */
+}
+/* Ajustes responsivos para pantallas móviles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;                  /* Ocupa todo el ancho en móviles */
+        height: 30px;                  /* Ajusta la altura de la barra */
+        position: fixed;
+        bottom: 0;                     /* Coloca la barra en la parte inferior */
+        top: auto;                     /* Elimina la posición superior */
+        flex-direction: row;           /* Cambia a disposición horizontal */
+        justify-content: space-around; /* Distribuye los íconos horizontalmente */
+        padding: 10px 0;               /* Ajusta el padding */
+    }
+
+        /* Contenedor oculto de la tabla */
+        .table-container {
+            display: none; /* Oculta la tabla */
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Encabezado -->
+    <header class="header">
+        <div class="title">ADAR</div>
+        <div class="subtitle">Avance de Obra 📈</div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main style="margin-top: 70px;">
+        <div class="form-container">
+            <!-- Avance total -->
+            <div class="avance-container">
+                <h3>Avance total: {{ avance_completo }}%</h3>
+                <progress value="{{ avance_completo }}" max="100"></progress>
+
+        {% if agrupadas_por_rol %}
+            {% for rol, datos in agrupadas_por_rol.items() %}
+                {% set rol_split = datos.rol.split() %}
+                <h3>Avance total de {{ rol_split[-1] }}: {{ datos.porcentaje }}%</h3> <!-- Solo muestra la última palabra del rol -->
+                <progress value="{{ datos.porcentaje }}" max="100"></progress>
+            {% endfor %}
+        {% endif %}
+        </div>
+
+            <!-- Tabla de selecciones separada por roles -->
+            {% if selecciones %}
+                {% for rol, registros in selecciones|groupby('rol_supervisor') %}
+                    <h3>{{ rol }}</h3>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Piso</th>
+                                    <th>Tipo</th>
+                                    <th>Fecha de Inicio</th>
+                                    <th>Fecha de Término</th>
+                                    <th>Días</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for seleccion in registros %}
+                                    <tr>
+                                        <td>{{ seleccion.elevacion }}</td>
+                                        <td>{{ seleccion.tipo }}</td>
+                                        <td>{{ seleccion.fecha_inicio.strftime('%Y-%m-%d') }}</td>
+                                        <td>{{ seleccion.fecha_termino.strftime('%Y-%m-%d') }}</td>
+                                        <td>{{ seleccion.diferencia_dias }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Contenedor del gráfico para este rol -->
+                    <div class="chart-container">
+                        <canvas id="chart-{{ rol | replace(' ', '-') }}"></canvas>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No hay selecciones registradas.</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <div class="sidebar">
+        <a href="{{ url_for('respuestas_selecciones') }}" class="{% if request.endpoint == 'respuestas_selecciones' %}active{% endif %}" title="Control de calidad">
+            <div class="icon-circle">👷‍♂️</div>
+        </a>
+        <a href="{{ url_for('avancejefe') }}" class="btn-avance" title="Registro de avance">
+            <div class="icon-circle">📋</div>
+        </a>
+        <a href="{{ url_for('jefeavancecalculado') }}" class="btn-avance" title="Avance">
+            <div class="icon-circle">📈</div>
+        </a>
+        <a href="{{ url_for('nuevojefe') }}" class="btn-avance" title="Registro de verificaciones">
+            <div class="icon-circle">✅</div>
+        </a>
+        <a href="{{ url_for('logout') }}" title="Cerrar Sesión">
+            <div class="icon-circle">🔴</div>
+        </a>
+    </div>
+
+    <script>
+        // Datos agrupados por roles
+        const dataByRole = {
+            {% for rol, registros in selecciones|groupby('rol_supervisor') %}
+            "{{ rol }}": {
+                labels: [{% for seleccion in registros %}"Piso {{ seleccion.elevacion }} ({{ seleccion.tipo }})"{% if not loop.last %}, {% endif %}{% endfor %}],
+                data: [{% for seleccion in registros %}{{ seleccion.porcentaje }}{% if not loop.last %}, {% endif %}{% endfor %}]
+            },
+            {% endfor %}
+        };
+
+        // Crear gráficos para cada supervisor
+        Object.entries(dataByRole).forEach(([role, data]) => {
+            const canvasId = `chart-${role.replace(/ /g, '-')}`;
+            const ctx = document.getElementById(canvasId).getContext('2d');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Porcentaje de Avance',
+                        data: data.data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Avance: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

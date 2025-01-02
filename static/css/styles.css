@@ -1,0 +1,139 @@
+/* Estilos generales del cuerpo */
+body {
+    background-color: #f0f0f0; /* Color de fondo claro */
+    font-family: 'Arial', sans-serif; /* Fuente moderna */
+    margin: 0; /* Eliminar márgenes por defecto */
+    padding: 0; /* Eliminar relleno por defecto */
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 800px; /* Ancho máximo para el contenedor */
+    margin: 0 auto; /* Centrar el contenedor */
+    padding: 20px; /* Relleno interno */
+    background-color: #ffffff; /* Fondo blanco para el contenedor */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+}
+
+/* Estilo de los campos de entrada */
+input[type="text"],
+input[type="password"] {
+    width: 100%; /* Ancho completo */
+    padding: 15px; /* Aumentar el relleno interno */
+    border: 2px solid #007bff; /* Borde azul */
+    border-radius: 4px; /* Bordes redondeados */
+    box-sizing: border-box; /* Incluir relleno y borde en el tamaño total */
+    font-size: 16px; /* Tamaño de fuente */
+    margin-bottom: 20px; /* Espaciado inferior entre campos */
+}
+
+/* Estilo del botón de envío */
+input[type="submit"] {
+    background-color: #28a745; /* Color verde para el botón */
+    color: white; /* Color de texto blanco */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    padding: 12px 15px; /* Relleno interno */
+    cursor: pointer; /* Cursor de puntero al pasar el mouse */
+    font-size: 16px; /* Tamaño de fuente */
+    transition: background-color 0.3s; /* Transición suave */
+}
+
+/* Cambio de color del botón al pasar el mouse */
+input[type="submit"]:hover {
+    background-color: #218838; /* Color más oscuro al pasar el mouse */
+}
+
+/* Estilo de subtítulos */
+h2 {
+    margin-top: 20px; /* Espaciado superior */
+    color: #6c757d; /* Color gris brillante */
+}
+
+/* Estilo del enlace de cierre de sesión */
+.logout {
+    display: inline-block; /* Mostrar como bloque en línea */
+    margin-top: 20px; /* Espaciado superior */
+    color: #007bff; /* Color de enlace azul */
+    text-decoration: none; /* Sin subrayado */
+}
+
+.logout:hover {
+    text-decoration: underline; /* Subrayar al pasar el mouse */
+}
+
+/* Estilo para el pie de página */
+footer {
+    text-align: center; /* Centrar texto */
+    margin-top: 20px; /* Espaciado superior */
+    color: #6c757d; /* Color gris */
+}
+
+/* Estilo adicional para el encabezado (ADAR) */
+.logo {
+    font-size: 24px; /* Tamaño de fuente para ADAR */
+    color: #ffffff; /* Texto blanco para el logo */
+    text-align: right; /* Alinear el texto a la derecha */
+}
+
+
+/* Contenedor de logo y subtítulo */
+.logo-container {
+    display: flex; /* Usar flexbox para alinear el título y subtítulo */
+    flex-direction: column; /* Colocar el título y subtítulo en una columna */
+    align-items: center; /* Centrar elementos */
+}
+
+/* Estilo de los campos de selección */
+select {
+    width: 100%; /* Ancho completo */
+    padding: 15px; /* Aumentar el relleno interno */
+    border: 2px solid #007bff; /* Borde azul */
+    border-radius: 4px; /* Bordes redondeados */
+    box-sizing: border-box; /* Incluir relleno y borde en el tamaño total */
+    font-size: 16px; /* Tamaño de fuente */
+    margin-bottom: 20px; /* Espaciado inferior entre campos */
+    appearance: none; /* Eliminar el estilo por defecto del navegador */
+}
+
+/* Estilo para el campo select cuando está enfocado */
+select:focus {
+    outline: none; /* Eliminar el contorno por defecto al enfocar */
+    border-color: #0056b3; /* Cambiar el color del borde al enfocar */
+}
+
+/* Estilos generales para las notificaciones */
+#notificaciones-list {
+    list-style-type: none; /* Eliminar los puntos de la lista */
+    padding: 0; /* Sin padding */
+    margin: 20px 0; /* Espaciado superior e inferior */
+}
+
+#notificaciones-list li {
+    background-color: #f8f9fa; /* Color de fondo claro */
+    border: 1px solid #ced4da; /* Borde gris */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 10px; /* Espaciado entre notificaciones */
+    position: relative; /* Para el botón de eliminar */
+    transition: background-color 0.3s; /* Transición suave */
+}
+
+#notificaciones-list li:hover {
+    background-color: #e2e6ea; /* Color de fondo al pasar el mouse */
+}
+
+.btn-eliminar {
+    color: #dc3545; /* Color rojo */
+    cursor: pointer; /* Cambiar el cursor */
+    font-weight: bold;
+    position: absolute; /* Posicionar el botón */
+    top: 10px; /* Espaciado desde arriba */
+    right: 10px; /* Espaciado desde la derecha */
+}
+
+.btn-eliminar:hover {
+    text-decoration: underline; /* Subrayar al pasar el mouse */
+}
+
